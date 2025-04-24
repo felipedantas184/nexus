@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ObsCard from "./ObsCard";
-import { Note } from "@/types/StudentTypes";
+import { Note } from "@/types/studentTypes";
 
 const ObsList = ({ notes, toggle }: { notes: Note[], toggle: (note: Note) => void }) => {
   const parseDate = (dateStr: string) => {

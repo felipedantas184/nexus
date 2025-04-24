@@ -1,4 +1,3 @@
-import { Note } from "@/types/StudentTypes";
 import { useEffect, useState } from "react";
 import { BiAddToQueue, BiSave } from "react-icons/bi";
 import { BsFileEarmarkLock2 } from "react-icons/bs";

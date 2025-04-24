@@ -2,7 +2,7 @@ import Handbook from "@/components/Handbook/Handbook";
 import StudentInfo from "@/components/Handbook/StudentInfo";
 import fireDB from "@/firebase/initFirebase";
 import Layout from "@/layout";
-import { Note, Student } from "@/types/StudentTypes";
+import { Note, Student } from "@/types/studentTypes";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import Head from "next/head";
 

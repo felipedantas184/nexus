@@ -1,4 +1,4 @@
-import { Student } from "@/types/StudentTypes";
+import { Student } from "@/types/studentTypes";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -28,8 +28,8 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
                 <Td>{student.birthday}</Td>
                 <Td>{student.grade}</Td>
                 <Td>{student.school}</Td>
-                <Td>{student.psychologist}</Td>
-                <Td>{student.psychiatrist}</Td>
+                <Td></Td>
+                <Td></Td>
                 <Td><Link href={`/handbook/${student.id}`} >Ação</Link></Td>
               </Tr>
             )))}

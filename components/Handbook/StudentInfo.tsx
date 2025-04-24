@@ -1,4 +1,4 @@
-import { Student } from "@/types/StudentTypes";
+import { Student } from "@/types/studentTypes";
 import { RxAvatar } from "react-icons/rx";
 import styled from "styled-components";
 

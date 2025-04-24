@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Note } from "@/types/StudentTypes";
+import { Note } from "@/types/studentTypes";
 
 const ObsCard = ({ note, toggle }: { note: Note, toggle: (note: Note) => void }) => {
   return (
