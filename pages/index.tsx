@@ -2,7 +2,7 @@ import SearchBar from "@/components/Dashboard/SearchBar";
 import StudentsTable from "@/components/Dashboard/StudentsTable";
 import fireDB from "@/firebase/initFirebase";
 import Layout from "@/layout";
-import { Student } from "@/types/StudentTypes";
+import { Student } from "@/types/studentTypes";
 import { collection, getDocs } from "firebase/firestore";
 import Head from "next/head";
 
