@@ -14,15 +14,15 @@ const TextField = ({
   onAddNote: () => void;
   onSaveNote: (updatedText: string) => void;
 }) => {
-  const [text, setText] = useState(note.text || "");
+  const [text, setText] = useState(note?.text || "");
 
   useEffect(() => {
-    setText(note.text || "");
+    setText(note?.text || "");
   }, [note]);
 
   return (
     <Container>
-      <TextBold># Observação de {note.authorType || "Monitor"}</TextBold>
+      <TextBold># Observação de {note?.authorType || "Monitor"}</TextBold>
       <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -30,7 +30,6 @@ const TextField = ({
         placeholder="Digite a observação..."
       />
       <Menu>
-        <BsFileEarmarkLock2 size={24} color="#13131A" />
         {!isReadOnly && (
           <BiSave
             size={24}

@@ -83,7 +83,7 @@ export default function DetailPage({
 
       <Layout>
         <StudentInfo student={student} />
-        <Handbook notes={notes} />
+        <Handbook notes={notes} studentId={student.id} />
       </Layout>
     </>
   )

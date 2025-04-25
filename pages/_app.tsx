@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 
-const noAuthRequired = ['/', '/authentication/signin', '/authentication/signup']
+const noAuthRequired = ['/authentication/signin', '/authentication/signup']
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()

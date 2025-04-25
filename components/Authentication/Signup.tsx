@@ -8,12 +8,12 @@ import { useRouter } from "next/router";
 import { useState } from "react"
 import styled from "styled-components";
 
-type Category = 'student' | 'monitor' | 'psychologist' | 'psychiatrist'
+type Category = 'estudante' | 'monitor' | 'psicólogo' | 'psiquiatra'
 
 const SingUp = () => {
   const { signup } = useAuth()
   const [data, setData] = useState<any>({})
-  const [category, setCategory] = useState<Category>('student')
+  const [category, setCategory] = useState<Category>('estudante')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
@@ -36,7 +36,8 @@ const SingUp = () => {
         birthday: data.birthday,
         cpf: data.cpf,
         phone: data.phone,
-        ...(category === 'student' && {
+        type: category,
+        ...(category === 'estudante' && {
           school: data.school,
           grade: data.grade,
         }),
@@ -52,11 +53,11 @@ const SingUp = () => {
       }
 
       const categoryCollectionMap: Record<Category, string> = {
-        student: 'students',
-        monitor: 'monitors',
-        psychologist: 'psychologist',
-        psychiatrist: 'psychiatrist',
-      }
+        estudante: 'students',
+        monitor: 'users',
+        psicólogo: 'users',
+        psiquiatra: 'users',
+      };
 
       const collectionName = categoryCollectionMap[category]
 
@@ -144,13 +145,13 @@ const SingUp = () => {
             </IWrap>
 
             <select value={category} onChange={(e) => setCategory(e.target.value as Category)}>
-              <option value="student">Estudante</option>
+              <option value="estudante">Estudante</option>
               <option value="monitor">Monitor</option>
-              <option value="psychologist">Psicólogo</option>
-              <option value="psychiatrist">Psiquiatra</option>
+              <option value="psicólogo">Psicólogo</option>
+              <option value="psiquiatra">Psiquiatra</option>
             </select>
 
-            {category === 'student' && (
+            {category === 'estudante' && (
               <>
                 <IWrap>
                   <Label>Escola</Label>

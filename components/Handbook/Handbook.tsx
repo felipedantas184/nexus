@@ -5,15 +5,16 @@ import { useEffect, useState } from "react";
 import { addDoc, collection, doc, getDoc, serverTimestamp } from "firebase/firestore";
 import fireDB from "@/firebase/initFirebase";
 import { useAuth } from "@/context/AuthContext";
+import { Note } from "@/types/studentTypes";
 
 type UserData = {
   name: string;
   type: string; // ex: "monitor", "psychologist", etc.
 };
 
-const Handbook = ({ notes }: { notes: any[] }) => {
+const Handbook = ({ notes, studentId }: { notes: Note[]; studentId: string }) => {
   const [allNotes, setAllNotes] = useState(notes);
-  const [selectedNote, setSelectedNote] = useState(notes[0]);
+  const [selectedNote, setSelectedNote] = useState(notes[0] || null);
 
   const { user } = useAuth(); // Firebase user
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -22,18 +23,19 @@ const Handbook = ({ notes }: { notes: any[] }) => {
     const fetchUserData = async () => {
       if (!user?.uid) return;
 
-      // Tenta buscar nas coleções que você tem
-      const collections = ["monitors", "psychologist", "psychiatrist"];
-      for (const collection of collections) {
-        const docRef = doc(fireDB, collection, user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserData({ name: docSnap.data().name, type: collection });
-          return;
-        }
-      }
+      try {
+        const userRef = doc(fireDB, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
-      console.warn("Usuário não encontrado nas coleções.");
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          setUserData({ name: data.name, type: data.type }); // Ex: monitor, psychologist ou psychiatrist
+        } else {
+          console.warn("Usuário não encontrado na coleção 'users'.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do usuário:", error);
+      }
     };
 
     fetchUserData();
@@ -41,21 +43,21 @@ const Handbook = ({ notes }: { notes: any[] }) => {
 
   const handleAddNote = () => {
     const tempExists = allNotes.some((note) => note.id.startsWith("temp-"));
-    if (tempExists || !userData || !selectedNote?.studentId) return;
+    if (tempExists || !userData) return;
 
     const today = new Date();
     const formattedDate = today.toLocaleDateString("pt-BR");
 
-    const newNote = {
+    const newNote: any = {
       id: `temp-${Date.now()}`,
       text: "",
-      studentId: selectedNote.studentId,
+      studentId: studentId, // <-- Usando a prop diretamente
       authorType: userData.type,
       authorName: userData.name,
       timeStamp: formattedDate, // <-- Agora no formato "dd/mm/yyyy"
     };
 
-    setAllNotes((prev) => [newNote, ...prev]);
+    setAllNotes((prev: any) => [newNote, ...prev]);
     setSelectedNote(newNote);
   };
 
@@ -114,7 +116,7 @@ const Handbook = ({ notes }: { notes: any[] }) => {
       <h1></h1>
       <TextField
         note={selectedNote}
-        isReadOnly={!selectedNote.id.startsWith("temp-")}
+        isReadOnly={!selectedNote?.id.startsWith("temp-")}
         onAddNote={handleAddNote}
         onSaveNote={handleSaveNote}
       />
