@@ -69,7 +69,7 @@ const Login = () => {
         </LBox>
         <RBox>
           <RTitle>Bem-Vindo de Volta!</RTitle>
-          <RSubtitle>Falta pouco para conhecer os quartos disponíveis para sua reserva!</RSubtitle>
+          <RSubtitle>Falta pouco para acessar a plataforma!</RSubtitle>
         </RBox>
       </Wrapper>
     </Container>

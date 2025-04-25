@@ -40,7 +40,7 @@ export default class MyDocument extends Document {
           <link rel="icon" type="image/svg+xml" href="/assets/images/logo/favicon.svg" />
           <link rel="shortcut icon" href="/assets/images/logo/favicon.ico" />
           <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/apple-touch-icon.png" />
-          <meta name="apple-mobile-web-app-title" content="Easy Phone" />
+          <meta name="apple-mobile-web-app-title" content="Nexus" />
           <link rel="manifest" href="/assets/images/logo/site.webmanifest" />
 
           <meta name="theme-color" content="#130028" />
