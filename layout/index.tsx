@@ -30,7 +30,7 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  height: calc(100vh - 60px);
 `
 const MainContent = styled.div`
   background-color: #FFF;

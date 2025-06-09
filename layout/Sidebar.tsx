@@ -1,4 +1,4 @@
-import {  FaBrain, FaHouse } from "react-icons/fa6";
+import {  FaBrain, FaHouse, FaVideo } from "react-icons/fa6";
 import styled from "styled-components";
 import Link from "next/link";
 import { FaChalkboardTeacher } from "react-icons/fa";
@@ -20,6 +20,7 @@ const Sidebar = () => {
           <Item><PageLink href={'/'}><FaHouse size={20} color="#F6F6F6" />Página Inicial</PageLink></Item>
           <Item><PageLink href={'/'}><FaBrain size={20} color="#F6F6F6" />Psicólogos</PageLink></Item>
           <Item><PageLink href={'/'}><FaChalkboardTeacher size={20} color="#F6F6F6" />Monitores</PageLink></Item>
+          <Item><PageLink href={'/'}><FaVideo size={20} color="#F6F6F6" />Instruções</PageLink></Item>
           <Item><PageLink href={'/'}><RxAvatar size={20} color="#F6F6F6" />Meu Perfil</PageLink></Item>
         </Menu>
         <Menu>
