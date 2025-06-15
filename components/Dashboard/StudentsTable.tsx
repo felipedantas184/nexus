@@ -8,14 +8,13 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
       <TableHeader>
         <Table cellPadding={4} cellSpacing={4} border={0}>
           <thead>
-            {/**<Tr>
+            <Tr>
               <Th style={{flex: 2, textAlign: 'left'}}>Nome</Th>
               <Th>Nascimento</Th>
               <Th>Série</Th>
               <Th>Escola</Th>
-              <Th>Psicólogo</Th>
-              <Th>Psiquiatra</Th>
-            </Tr> */}
+              <Th>Ação</Th>
+            </Tr>
           </thead>
         </Table>
       </TableHeader>
@@ -28,8 +27,6 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
                 <Td>{student.birthday}</Td>
                 <Td>{student.grade}</Td>
                 <Td>{student.school}</Td>
-                <Td></Td>
-                <Td></Td>
                 <Td><Link href={`/handbook/${student.id}`} >Ação</Link></Td>
               </Tr>
             )))}
@@ -44,6 +41,7 @@ export default StudentsTable;
 
 const Wrapper = styled.div`
   width: 100%;
+  padding: 0px 8px;
 
 	display: flex;
 	flex-direction: column;
@@ -52,7 +50,8 @@ const Wrapper = styled.div`
   overflow: hidden;
 `
 const TableHeader = styled.div`
-  background-color: #2694A7;
+  border-bottom: 1px solid gray;
+  border-radius: 10px;
 `
 const TableContent = styled.div`
   height: 100%;
@@ -69,9 +68,9 @@ const Tr = styled.tr`
 const Th = styled.th`
   padding: 8px;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
-  color: #FFF;
+  color: #13131A;
   text-transform: uppercase;
 
   flex: 1;

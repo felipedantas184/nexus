@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BiAddToQueue, BiSave } from "react-icons/bi";
-import { BsFileEarmarkLock2 } from "react-icons/bs";
+import { AiOutlineClose } from "react-icons/ai"; // ← Novo ícone
 import styled from "styled-components";
 
 const TextField = ({
@@ -8,11 +8,15 @@ const TextField = ({
   isReadOnly,
   onAddNote,
   onSaveNote,
+  onCancelNote, 
+  userType,
 }: {
   note: any;
   isReadOnly: boolean;
   onAddNote: () => void;
   onSaveNote: (updatedText: string) => void;
+  onCancelNote: () => void;
+  userType: string | undefined;
 }) => {
   const [text, setText] = useState(note?.text || "");
 
@@ -22,7 +26,7 @@ const TextField = ({
 
   return (
     <Container>
-      <TextBold># Observação de {note?.authorType || "Monitor"}</TextBold>
+      <TextBold># Observação de <span style={{textTransform: 'capitalize'}}>{userType}</span></TextBold>
       <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -31,18 +35,29 @@ const TextField = ({
       />
       <Menu>
         {!isReadOnly && (
-          <BiSave
-            size={24}
-            color="#13131A"
-            onClick={() => onSaveNote(text)}
-            style={{ cursor: "pointer" }}
-          />
+          <>
+            <BiSave
+              size={24}
+              color="#13131A"
+              onClick={() => onSaveNote(text)}
+              style={{ cursor: "pointer" }}
+              title="Salvar nota"
+            />
+            <AiOutlineClose
+              size={24}
+              color="#ff4d4f"
+              onClick={onCancelNote}
+              style={{ cursor: "pointer" }}
+              title="Cancelar nota"
+            />
+          </>
         )}
         <BiAddToQueue
           size={24}
           color="#13131A"
           onClick={onAddNote}
           style={{ cursor: "pointer" }}
+          title="Nova nota"
         />
       </Menu>
     </Container>
@@ -72,7 +87,7 @@ const Textarea = styled.textarea`
   font-size: 14px;
   font-weight: 500;
   width: 100%;
-  height: 250px;
+  height: 100%;
   resize: none;
   border: none;
   outline: none;

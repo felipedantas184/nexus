@@ -26,8 +26,7 @@ const Container = styled.div`
   gap: 8px;
 
   width: 100%;
-  border-radius: 8px;
-  padding: 8px 12px;
+  padding: 8px 8px;
 `;
 
 const Input = styled.input`
@@ -37,7 +36,7 @@ const Input = styled.input`
   font-size: 16px;
   background: #E6E6E6;
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 10px;
   color: #333;
 
   &::placeholder {

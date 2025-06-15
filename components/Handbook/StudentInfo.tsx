@@ -8,7 +8,7 @@ const StudentInfo = ({ student }: { student: Student }) => {
       <RxAvatar size={75} color="#13131A" />
       <TextWrapper>
         <SName>{student.name}</SName>
-        <SInfo>{student.birthday}</SInfo>
+        <SInfo>{student.school} - {student.birthday}</SInfo>
       </TextWrapper>
     </Container>
    );

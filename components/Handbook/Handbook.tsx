@@ -9,7 +9,7 @@ import { Note } from "@/types/studentTypes";
 
 type UserData = {
   name: string;
-  type: string; // ex: "monitor", "psychologist", etc.
+  type: string;
 };
 
 const Handbook = ({ notes, studentId }: { notes: Note[]; studentId: string }) => {
@@ -94,6 +94,12 @@ const Handbook = ({ notes, studentId }: { notes: Note[]; studentId: string }) =>
     }
   };
 
+  const handleCancelNote = () => {
+    const filtered = allNotes.filter((n) => !n.id.startsWith("temp-"));
+    setAllNotes(filtered);
+    setSelectedNote(filtered[0] || null); // volta para a nota anterior ou nenhuma
+  };
+
   const toggle = (note: any) => {
     // Se clicou na mesma nota, não faz nada
     if (note.id === selectedNote?.id) return;
@@ -119,6 +125,8 @@ const Handbook = ({ notes, studentId }: { notes: Note[]; studentId: string }) =>
         isReadOnly={!selectedNote?.id.startsWith("temp-")}
         onAddNote={handleAddNote}
         onSaveNote={handleSaveNote}
+        onCancelNote={handleCancelNote}
+        userType={userData?.type}
       />
       <ObsList notes={allNotes} toggle={toggle} />
     </Container>
