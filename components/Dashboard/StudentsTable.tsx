@@ -1,15 +1,87 @@
 import { Student } from "@/types/studentTypes";
 import Link from "next/link";
 import styled from "styled-components";
+import { useState, useMemo } from "react";
+import { BsFillArrowUpRightSquareFill } from "react-icons/bs";
 
 const StudentsTable = ({ students }: { students: Student[] }) => {
+  const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
+  const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
+  const [selectedOrigin, setSelectedOrigin] = useState<string | null>(null);
+
+  // Extrai valores únicos
+  const grades = useMemo(() => [...new Set(students.map(s => s.grade))], [students]);
+  const schools = useMemo(() => {
+    return selectedGrade
+      ? [...new Set(students.filter(s => s.grade === selectedGrade).map(s => s.school))]
+      : [];
+  }, [students, selectedGrade]);
+  const origins = useMemo(() => {
+    return selectedGrade && selectedSchool
+      ? [...new Set(students
+          .filter(s => s.grade === selectedGrade && s.school === selectedSchool)
+          .map(s => s.origin)
+        )]
+      : [];
+  }, [students, selectedGrade, selectedSchool]);
+
+  const filteredStudents = useMemo(() => {
+    return students.filter(s => {
+      return (
+        (!selectedGrade || s.grade === selectedGrade) &&
+        (!selectedSchool || s.school === selectedSchool) &&
+        (!selectedOrigin || s.origin === selectedOrigin)
+      );
+    });
+  }, [students, selectedGrade, selectedSchool, selectedOrigin]);
+
+  function byName(a: Student, b: Student) {
+    if (a.name < b.name) { return -1; }
+    if (a.name > b.name) { return 1; }
+    return 0;
+  }
+
   return (
     <Wrapper>
+      <Filters>
+        <Select onChange={e => {
+          setSelectedGrade(e.target.value);
+          setSelectedSchool(null);
+          setSelectedOrigin(null);
+        }}>
+          <option value="">Filtrar por Série</option>
+          {grades.map(g => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </Select>
+
+        {selectedGrade && (
+          <Select onChange={e => {
+            setSelectedSchool(e.target.value);
+            setSelectedOrigin(null);
+          }}>
+            <option value="">Filtrar por Escola</option>
+            {schools.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </Select>
+        )}
+
+        {selectedGrade && selectedSchool && (
+          <Select onChange={e => setSelectedOrigin(e.target.value)}>
+            <option value="">Filtrar por Origem</option>
+            {origins.map(o => (
+              <option key={o} value={o}>{o === 'particular' ? 'Particular' : 'Fracta'}</option>
+            ))}
+          </Select>
+        )}
+      </Filters>
+
       <TableHeader>
         <Table cellPadding={4} cellSpacing={4} border={0}>
           <thead>
             <Tr>
-              <Th style={{flex: 2, textAlign: 'left'}}>Nome</Th>
+              <Th style={{ flex: 2, textAlign: "left" }}>Nome</Th>
               <Th>Nascimento</Th>
               <Th>Série</Th>
               <Th>Escola</Th>
@@ -18,24 +90,25 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
           </thead>
         </Table>
       </TableHeader>
+
       <TableContent>
         <Table cellPadding={0} cellSpacing={0} border={0}>
           <tbody>
-            {(students.map((student: Student) => (
+            {filteredStudents.sort(byName).map((student: Student) => (
               <Tr key={student.id}>
-                <Td style={{ flex: 2, textAlign: 'left' }}>{student.name}</Td>
+                <Td style={{ flex: 2, textAlign: "left" }}>{student.name}</Td>
                 <Td>{student.birthday}</Td>
                 <Td>{student.grade}</Td>
                 <Td>{student.school}</Td>
-                <Td><Link href={`/handbook/${student.id}`} >Ação</Link></Td>
+                <Td><Link href={`/handbook/${student.id}`}><BsFillArrowUpRightSquareFill size={16}  /></Link></Td>
               </Tr>
-            )))}
+            ))}
           </tbody>
         </Table>
       </TableContent>
     </Wrapper>
   );
-}
+};
 
 export default StudentsTable;
 
@@ -64,6 +137,10 @@ const Table = styled.table`
 const Tr = styled.tr`
   display: flex;
   justify-content: space-between;
+
+  &:hover {
+    background-color: lightgray;
+  }
 `
 const Th = styled.th`
   padding: 8px;
@@ -86,3 +163,16 @@ const Td = styled.td`
 
   flex: 1;
 `
+const Filters = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-self: flex-start;
+`;
+
+const Select = styled.select`
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+`;

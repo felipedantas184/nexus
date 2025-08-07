@@ -1,22 +1,31 @@
 type Student = {
-  id: string,
-  name: string,
-  email: string,
-  birthday: string,
-  cpf: string,
-  phone: string,
-  school: string,
-  grade: string,
-  address: {
-    zipCode: string,
-    district: string,
-    street: string,
-    number: string,
-    complement?: string,
-    city: string,
-    state: string,
-  }
-}
+  id: string;
+  name: string;
+  parent: string,
+  imageUrl?: string,
+  email?: string;
+  birthday?: string;
+  cpf?: string;
+  phone?: string;
+  school: string;
+  grade: string;
+  origin: 'particular' | 'fracta';
+  diagnosis?: string[]; // pode conter múltiplos diagnósticos
+  medicalInfo?: {
+    medications?: string[];
+    observations?: string;
+  };
+  address?: {
+    zipCode: string;
+    district: string;
+    street: string;
+    number: string;
+    complement?: string;
+    city: string;
+    state: string;
+  };
+};
+
 
 type Monitor = {
   id: string,
