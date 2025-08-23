@@ -24,6 +24,7 @@ type Student = {
     city: string;
     state: string;
   };
+  authorizedProfessionals?: string[]; 
 };
 
 

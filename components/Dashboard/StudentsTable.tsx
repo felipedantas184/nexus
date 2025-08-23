@@ -3,11 +3,14 @@ import Link from "next/link";
 import styled from "styled-components";
 import { useState, useMemo } from "react";
 import { BsFillArrowUpRightSquareFill } from "react-icons/bs";
+import { useAuth } from "@/context/AuthContext";
 
 const StudentsTable = ({ students }: { students: Student[] }) => {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
   const [selectedOrigin, setSelectedOrigin] = useState<string | null>(null);
+
+  const { user } = useAuth(); // pega user atual do Firebase
 
   // Extrai valores únicos
   const grades = useMemo(() => [...new Set(students.map(s => s.grade))], [students]);
@@ -94,15 +97,29 @@ const StudentsTable = ({ students }: { students: Student[] }) => {
       <TableContent>
         <Table cellPadding={0} cellSpacing={0} border={0}>
           <tbody>
-            {filteredStudents.sort(byName).map((student: Student) => (
-              <Tr key={student.id}>
-                <Td style={{ flex: 2, textAlign: "left" }}>{student.name}</Td>
-                <Td>{student.birthday}</Td>
-                <Td>{student.grade}</Td>
-                <Td>{student.school}</Td>
-                <Td><Link href={`/handbook/${student.id}`}><BsFillArrowUpRightSquareFill size={16}  /></Link></Td>
-              </Tr>
-            ))}
+            {filteredStudents.sort(byName).map((student: Student) => {
+              const isAuthorized = student.authorizedProfessionals?.includes(user?.uid ?? "");
+
+              return (
+                <Tr key={student.id}>
+                  <Td style={{ flex: 2, textAlign: "left" }}>{student.name}</Td>
+                  <Td>{student.birthday}</Td>
+                  <Td>{student.grade}</Td>
+                  <Td>{student.school}</Td>
+                  <Td>
+                    {isAuthorized ? (
+                      <Link href={`/handbook/${student.id}`}>
+                        <BsFillArrowUpRightSquareFill size={16} />
+                      </Link>
+                    ) : (
+                      <DisabledIcon>
+                        <BsFillArrowUpRightSquareFill size={16} />
+                      </DisabledIcon>
+                    )}
+                  </Td>
+                </Tr>
+              );
+            })}
           </tbody>
         </Table>
       </TableContent>
@@ -175,4 +192,9 @@ const Select = styled.select`
   font-size: 14px;
   border-radius: 8px;
   border: 1px solid #ccc;
+`;
+
+const DisabledIcon = styled.div`
+  opacity: 0.3;
+  cursor: not-allowed;
 `;

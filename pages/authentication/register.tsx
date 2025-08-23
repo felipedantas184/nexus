@@ -1,10 +1,16 @@
 // pages/students/register.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import fireDB from '@/firebase/initFirebase';
 
+type Professional = {
+  id: string;
+  name: string;
+};
+
 const RegisterStudent = () => {
+  const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [student, setStudent] = useState({
     name: '',
     parent: '',
@@ -28,37 +34,43 @@ const RegisterStudent = () => {
       complement: '',
       city: '',
       state: ''
-    }
+    },
+    authorizedProfessionals: [] as string[]
   });
 
-  const handleArrayChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, field: 'diagnosis' | 'medications') => {
-    const updated = [...(field === 'diagnosis' ? student.diagnosis : student.medicalInfo.medications || [])];
-    updated[index] = e.target.value;
-
-    if (field === 'diagnosis') {
-      setStudent(prev => ({ ...prev, diagnosis: updated }));
-    } else {
-      setStudent(prev => ({
-        ...prev,
-        medicalInfo: { ...prev.medicalInfo, medications: updated }
+  // Buscar profissionais cadastrados
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      const snapshot = await getDocs(collection(fireDB, 'users'));
+      const list = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as { name: string })
       }));
-    }
-  };
+      setProfessionals(list);
+    };
+    fetchProfessionals();
+  }, []);
 
-  const addField = (field: 'diagnosis' | 'medications') => {
-    if (field === 'diagnosis') {
-      setStudent(prev => ({ ...prev, diagnosis: [...(prev.diagnosis || []), ''] }));
-    } else {
-      setStudent(prev => ({
-        ...prev,
-        medicalInfo: { ...prev.medicalInfo, medications: [...(prev.medicalInfo.medications || []), ''] }
-      }));
-    }
+  const handleProfessionalSelect = (profId: string, checked: boolean) => {
+    setStudent((prev) => {
+      let updated = [...prev.authorizedProfessionals];
+
+      if (checked) {
+        // Adiciona se não existir
+        if (!updated.includes(profId)) {
+          updated.push(profId);
+        }
+      } else {
+        // Remove se existir
+        updated = updated.filter((id) => id !== profId);
+      }
+
+      return { ...prev, authorizedProfessionals: updated };
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
     if (name.includes('address.')) {
       const addressField = name.split('.')[1];
       setStudent(prev => ({
@@ -94,7 +106,7 @@ const RegisterStudent = () => {
         <label>Nome*</label>
         <input name="name" value={student.name} onChange={handleChange} required />
 
-        <label>Mãe/Pai</label>
+        <label>Mãe/Pai*</label>
         <input name="parent" value={student.parent} onChange={handleChange} required />
 
         <label>Escola*</label>
@@ -124,53 +136,30 @@ const RegisterStudent = () => {
         <label>Origem*</label>
         <select name="origin" value={student.origin} onChange={handleChange} required>
           <option value="" hidden>Selecione</option>
-
-          <option value="Particular">Particular</option>
-          <option value="Fracta">Fracta</option>
+          <option value="particular">Particular</option>
+          <option value="fracta">Fracta</option>
         </select>
 
-        {/**
-        <label>Diagnóstico*(s)</label>
-        {student.diagnosis.map((item, idx) => (
-          <input
-            key={idx}
-            value={item}
-            onChange={e => handleArrayChange(e, idx, 'diagnosis')}
-            placeholder={`Diagnóstico ${idx + 1}`}
-          />
-        ))}
-        <button type="button" onClick={() => addField('diagnosis')}>+ Diagnóstico</button>
+        <label>Profissionais autorizados*</label>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {professionals.map((prof) => (
+            <label
+              key={prof.id}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 13 }}
+            >
+              <input
+                type="checkbox"
+                value={prof.id}
+                checked={student.authorizedProfessionals.includes(prof.id)}
+                onChange={(e) =>
+                  handleProfessionalSelect(prof.id, e.target.checked)
+                }
+              />
+              {prof.name}
+            </label>
+          ))}
+        </div>
 
-        <label>Medicações*</label>
-        {student.medicalInfo.medications?.map((item, idx) => (
-          <input
-            key={idx}
-            value={item}
-            onChange={e => handleArrayChange(e, idx, 'medications')}
-            placeholder={`Medicação ${idx + 1}`}
-          />
-        ))}
-        <button type="button" onClick={() => addField('medications')}>+ Medicação</button>
-
-        <label>Observações* Médicas</label>
-        <textarea name="observations" value={student.medicalInfo.observations} onChange={handleChange} />
-
-        <h3>Endereço</h3>
-        <label>CEP*</label>
-        <input name="address.zipCode" value={student.address?.zipCode} onChange={handleChange} />
-        <label>Bairro*</label>
-        <input name="address.district" value={student.address?.district} onChange={handleChange} />
-        <label>Rua*</label>
-        <input name="address.street" value={student.address?.street} onChange={handleChange} />
-        <label>Número*</label>
-        <input name="address.number" value={student.address?.number} onChange={handleChange} />
-        <label>Complemento*</label>
-        <input name="address.complement" value={student.address?.complement} onChange={handleChange} />
-        <label>Cidade*</label>
-        <input name="address.city" value={student.address?.city} onChange={handleChange} />
-        <label>Estado*</label>
-        <input name="address.state" value={student.address?.state} onChange={handleChange} />
-        */}
         <SubmitButton type="submit">Salvar Estudante</SubmitButton>
       </Form>
     </Container>
@@ -206,11 +195,6 @@ const Form = styled.form`
 
   textarea {
     min-height: 80px;
-  }
-
-  button {
-    margin-top: 0.5rem;
-    width: fit-content;
   }
 `;
 

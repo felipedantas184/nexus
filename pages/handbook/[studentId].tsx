@@ -5,6 +5,11 @@ import Layout from "@/layout";
 import { Note, Student } from "@/types/studentTypes";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Link from "next/link";
+import { BiArrowToRight } from "react-icons/bi";
+import { RxArrowTopRight } from "react-icons/rx";
 
 export const getServerSideProps = async (context: any) => {
   const id = context.params.studentId;
@@ -37,12 +42,12 @@ export const getServerSideProps = async (context: any) => {
     return {
       id: doc.id,
       text: data.text || "",
-      timeStamp: data.timeStamp || null, // Garanta que 'timeStamp' não seja undefined
+      timeStamp: data.timeStamp || null,
       studentId: data.studentId,
       psychologistId: data.psychologistId || null,
       psychiatristId: data.psychiatristId || null,
       monitorId: data.monitorId || null,
-      authorType: data.authorType || "monitor", // padrão seguro
+      authorType: data.authorType || "monitor",
       authorName: data.authorName || "Desconhecido",
     };
   });
@@ -62,6 +67,38 @@ export default function DetailPage({
   student: Student;
   notes: Note[];
 }) {
+  const [authorized, setAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Se o aluno tiver campo authorizedProfessionals, verificamos se uid está incluso
+        const allowed = student.authorizedProfessionals?.includes(user.uid);
+        setAuthorized(!!allowed);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [student]);
+
+  if (loading) {
+    return <Layout><p>Carregando...</p></Layout>;
+  }
+
+  if (!authorized) {
+    return (
+      <Layout>
+        <div style={{padding: 8, display: "flex", flexDirection: 'column', gap: 8}}>
+          <h3>Você não tem permissão para visualizar este aluno.</h3>
+          <Link style={{display: 'flex', gap: 4}} href={'/'}>Clique para voltar à página inicial <RxArrowTopRight /></Link>
+        </div>
+      </Layout>
+    )
+  }
+
   return (
     <>
       <Head>
@@ -86,5 +123,5 @@ export default function DetailPage({
         <Handbook notes={notes} studentId={student.id} />
       </Layout>
     </>
-  )
+  );
 }
