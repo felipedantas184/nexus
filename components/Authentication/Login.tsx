@@ -62,10 +62,10 @@ const Login = () => {
             </IWrap>
             <FButton type="submit" >Entrar</FButton>
           </Form>
-          <BWrap>
+          {/**<BWrap>  
             <FOption href={'/reset'} >Esqueci minha senha</FOption>
             <FOption href={'/authentication/signup'}>Cadastre-se</FOption>
-          </BWrap>
+          </BWrap>*/}
         </LBox>
         <RBox>
           <RTitle>Bem-Vindo de Volta!</RTitle>

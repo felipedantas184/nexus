@@ -36,7 +36,7 @@ type Monitor = {
   cpf: string,
   phone: string,
   type: string,
-  address: {
+  address?: {
     zipCode: string,
     district: string,
     street: string,
@@ -55,7 +55,7 @@ type Psychologist = {
   cpf: string,
   phone: string,
   type: string,
-  address: {
+  address?: {
     zipCode: string,
     district: string,
     street: string,
@@ -74,7 +74,7 @@ type Psychiatrist = {
   cpf: string,
   phone: string,
   type: string,
-  address: {
+  address?: {
     zipCode: string,
     district: string,
     street: string,

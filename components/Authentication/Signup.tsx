@@ -8,12 +8,12 @@ import { useRouter } from "next/router";
 import { useState } from "react"
 import styled from "styled-components";
 
-type Category = 'estudante' | 'monitor' | 'psicólogo' | 'psiquiatra'
+type Category = 'monitor' | 'psicólogo' | 'psiquiatra'
 
 const SingUp = () => {
   const { signup } = useAuth()
   const [data, setData] = useState<any>({})
-  const [category, setCategory] = useState<Category>('estudante')
+  const [category, setCategory] = useState<Category>('monitor')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
@@ -37,10 +37,6 @@ const SingUp = () => {
         cpf: data.cpf,
         phone: data.phone,
         type: category,
-        ...(category === 'estudante' && {
-          school: data.school,
-          grade: data.grade,
-        }),
         address: {
           zipCode: data.zipCode,
           district: data.district,
@@ -53,7 +49,6 @@ const SingUp = () => {
       }
 
       const categoryCollectionMap: Record<Category, string> = {
-        estudante: 'students',
         monitor: 'users',
         psicólogo: 'users',
         psiquiatra: 'users',
@@ -74,7 +69,7 @@ const SingUp = () => {
       if (auth.currentUser) {
         await deleteUser(auth.currentUser)
       }
-  
+
       alert('Erro ao cadastrar usuário: ' + err.message)
     } finally {
       setLoading(false)
@@ -114,56 +109,14 @@ const SingUp = () => {
               <Label>Nascimento</Label>
               <Input type='date' name="birthday" placeholder="Aniversário" onChange={handleChange} required />
             </IWrap>
-
             <IWrap>
-              <Label>CEP</Label>
-              <Input type="text" name="zipCode" placeholder="CEP" onChange={handleChange} />
+              <Label>Cargo</Label>
+              <Select value={category} onChange={(e) => setCategory(e.target.value as Category)} required>
+                <option value="monitor">Monitor</option>
+                <option value="psicólogo">Psicólogo</option>
+                <option value="psiquiatra">Psiquiatra</option>
+              </Select>
             </IWrap>
-            <IWrap>
-              <Label>Bairro</Label>
-              <Input type="text" name="district" placeholder="Bairro" onChange={handleChange} />
-            </IWrap>
-            <IWrap>
-              <Label>Rua/Avenida</Label>
-              <Input type="text" name="street" placeholder="Rua" onChange={handleChange} />
-            </IWrap>
-            <IWrap>
-              <Label>Número</Label>
-              <Input type="number" name="number" placeholder="Número" onChange={handleChange} />
-            </IWrap>
-            <IWrap>
-              <Label>Complemento</Label>
-              <Input type="text" name="complement" placeholder="Complemento" onChange={handleChange} />
-            </IWrap>
-            <IWrap>
-              <Label>Cidade</Label>
-              <Input type="text" name="city" placeholder="Cidade" onChange={handleChange} />
-            </IWrap>
-            <IWrap>
-              <Label>Estado</Label>
-              <Input type="text" name="state" placeholder="Estado" onChange={handleChange} />
-            </IWrap>
-
-            <select value={category} onChange={(e) => setCategory(e.target.value as Category)}>
-              <option value="estudante">Estudante</option>
-              <option value="monitor">Monitor</option>
-              <option value="psicólogo">Psicólogo</option>
-              <option value="psiquiatra">Psiquiatra</option>
-            </select>
-
-            {category === 'estudante' && (
-              <>
-                <IWrap>
-                  <Label>Escola</Label>
-                  <Input name="school" placeholder="Escola" onChange={handleChange} />
-                </IWrap>
-                <IWrap>
-                  <Label>Série</Label>
-                  <Input name="grade" placeholder="Série" onChange={handleChange} />
-                </IWrap>
-              </>
-            )}
-
           </Form>
 
           <BWrap>
@@ -222,12 +175,10 @@ const Title = styled.h1`
 const Form = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, 1fr);
   gap: 8px;
 
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(8, 1fr);
     gap: 12px;
   }
 `
@@ -250,6 +201,19 @@ const Label = styled.label`
   margin-bottom: 4px;
 `
 const Input = styled.input`
+  background-color: #F1F1F1;
+  color: #33333A;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+
+  padding: 8px 12px; 
+  width: 100%;
+  max-width: 300px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+`
+const Select = styled.select`
   background-color: #F1F1F1;
   color: #33333A;
   font-size: 14px;
