@@ -11,8 +11,6 @@ const Sidebar = () => {
   const { logout, user } = useAuth()
   const router = useRouter()
 
-  console.log(user)
-
   return (
     <Container>
       <Wrapper>

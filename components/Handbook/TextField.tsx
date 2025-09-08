@@ -106,7 +106,7 @@ const TextField = ({
       )}
 
       {/* Exibição das respostas quando só estiver lendo */}
-      {isReadOnly && note?.formData && (
+      {isReadOnly && (
         <FormView>
           <ViewItem><strong>Nível de Energia:</strong> {participation}</ViewItem>
           <ViewItem><strong>Nível de Atenção:</strong> {attention}</ViewItem>

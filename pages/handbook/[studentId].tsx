@@ -49,6 +49,7 @@ export const getServerSideProps = async (context: any) => {
       monitorId: data.monitorId || null,
       authorType: data.authorType || "monitor",
       authorName: data.authorName || "Desconhecido",
+      formData: data.formData || null, // 👈 AQUI
     };
   });
 
@@ -91,9 +92,9 @@ export default function DetailPage({
   if (!authorized) {
     return (
       <Layout>
-        <div style={{padding: 8, display: "flex", flexDirection: 'column', gap: 8}}>
+        <div style={{ padding: 8, display: "flex", flexDirection: 'column', gap: 8 }}>
           <h3>Você não tem permissão para visualizar este aluno.</h3>
-          <Link style={{display: 'flex', gap: 4}} href={'/'}>Clique para voltar à página inicial <RxArrowTopRight /></Link>
+          <Link style={{ display: 'flex', gap: 4 }} href={'/'}>Clique para voltar à página inicial <RxArrowTopRight /></Link>
         </div>
       </Layout>
     )
