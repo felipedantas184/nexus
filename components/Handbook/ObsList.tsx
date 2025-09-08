@@ -2,7 +2,15 @@ import styled from "styled-components";
 import ObsCard from "./ObsCard";
 import { Note } from "@/types/studentTypes";
 
-const ObsList = ({ notes, toggle }: { notes: Note[], toggle: (note: Note) => void }) => {
+const ObsList = ({
+  notes,
+  toggle,
+  selectedNote,
+}: {
+  notes: Note[];
+  toggle: (note: Note) => void;
+  selectedNote: Note | null;
+}) => {
   const parseDate = (dateStr: string) => {
     const [day, month, year] = dateStr.split("/");
     return new Date(`${year}-${month}-${day}`);
@@ -18,7 +26,12 @@ const ObsList = ({ notes, toggle }: { notes: Note[], toggle: (note: Note) => voi
   return (
     <Container>
       {sortedNotes.map((note) => (
-        <ObsCard key={note.id} note={note} toggle={toggle} />
+        <ObsCard
+          key={note.id}
+          note={note}
+          toggle={toggle}
+          isSelected={note.id === selectedNote?.id} // 🔹 Passa info
+        />
       ))}
     </Container>
   );

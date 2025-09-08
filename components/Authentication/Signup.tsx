@@ -29,7 +29,7 @@ const SingUp = () => {
       const authResult = await signup(data.email, data.password)
       const userId = authResult.user.uid
 
-      const userData = {
+      const userData: any = {
         id: userId,
         name: data.name,
         email: data.email,
@@ -37,14 +37,18 @@ const SingUp = () => {
         cpf: data.cpf,
         phone: data.phone,
         type: category,
-        address: {
-          zipCode: data.zipCode,
-          district: data.district,
-          street: data.street,
-          number: data.number,
+      }
+
+      // Só adiciona address se o usuário tiver preenchido algo
+      if (data.zipCode || data.street || data.city || data.state) {
+        userData.address = {
+          zipCode: data.zipCode || '',
+          district: data.district || '',
+          street: data.street || '',
+          number: data.number || '',
           complement: data.complement || '',
-          city: data.city,
-          state: data.state,
+          city: data.city || '',
+          state: data.state || '',
         }
       }
 

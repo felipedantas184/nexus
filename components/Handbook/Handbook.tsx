@@ -63,38 +63,38 @@ const Handbook = ({ notes, studentId }: { notes: Note[]; studentId: string }) =>
 
 
   const handleSaveNote = async (updatedText: string, formData?: any) => {
-  const isNewNote = selectedNote.id.startsWith("temp-");
-  if (!isNewNote) return;
+    const isNewNote = selectedNote.id.startsWith("temp-");
+    if (!isNewNote) return;
 
-  try {
-    const newDocRef = await addDoc(collection(fireDB, "notes"), {
-      text: updatedText,
-      studentId: selectedNote.studentId,
-      authorType: selectedNote.authorType,
-      authorName: selectedNote.authorName,
-      timeStamp: selectedNote.timeStamp,
-      formData: formData || null,  // <-- salva o formulário junto
-    });
+    try {
+      const newDocRef = await addDoc(collection(fireDB, "notes"), {
+        text: updatedText,
+        studentId: selectedNote.studentId,
+        authorType: selectedNote.authorType,
+        authorName: selectedNote.authorName,
+        timeStamp: selectedNote.timeStamp,
+        formData: formData || null,  // <-- salva o formulário junto
+      });
 
-    const savedNote = {
-      ...selectedNote,
-      id: newDocRef.id,
-      text: updatedText,
-      formData: formData || null,
-    };
+      const savedNote = {
+        ...selectedNote,
+        id: newDocRef.id,
+        text: updatedText,
+        formData: formData || null,
+      };
 
-    const updatedNotes = allNotes
-      .filter((note) => !note.id.startsWith("temp-"))
-      .concat(savedNote);
+      const updatedNotes = allNotes
+        .filter((note) => !note.id.startsWith("temp-"))
+        .concat(savedNote);
 
-    setAllNotes(updatedNotes);
-    setSelectedNote(savedNote);
-    alert("Nota salva com sucesso!");
-  } catch (error) {
-    console.error("Erro ao salvar nota:", error);
-    alert("Erro ao salvar nota.");
-  }
-};
+      setAllNotes(updatedNotes);
+      setSelectedNote(savedNote);
+      alert("Nota salva com sucesso!");
+    } catch (error) {
+      console.error("Erro ao salvar nota:", error);
+      alert("Erro ao salvar nota.");
+    }
+  };
 
   const handleCancelNote = () => {
     const filtered = allNotes.filter((n) => !n.id.startsWith("temp-"));
@@ -130,7 +130,7 @@ const Handbook = ({ notes, studentId }: { notes: Note[]; studentId: string }) =>
         onCancelNote={handleCancelNote}
         userType={userData?.type}
       />
-      <ObsList notes={allNotes} toggle={toggle} />
+      <ObsList notes={allNotes} toggle={toggle} selectedNote={selectedNote} />
     </Container>
   );
 };
